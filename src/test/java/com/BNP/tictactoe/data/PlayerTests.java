@@ -36,7 +36,7 @@ public class PlayerTests {
         final String result = player.getUsername();
 
         //then
-        assertEquals("Fields wasn't retrieved properly", result, "Player 1");
+        assertEquals("Field wasn't retrieved properly", result, "Player 1");
     }
 
 }
