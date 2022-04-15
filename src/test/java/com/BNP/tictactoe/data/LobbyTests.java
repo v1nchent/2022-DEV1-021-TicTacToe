@@ -1,5 +1,7 @@
 package com.BNP.tictactoe.data;
 
+import com.BNP.tictactoe.models.Game;
+import com.BNP.tictactoe.models.Lobby;
 import com.BNP.tictactoe.models.Player;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
