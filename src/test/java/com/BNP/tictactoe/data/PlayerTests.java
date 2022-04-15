@@ -1,5 +1,6 @@
 package com.BNP.tictactoe.data;
 
+import com.BNP.tictactoe.models.Player;
 import org.junit.jupiter.api.Test;
 
 
@@ -27,7 +28,7 @@ public class PlayerTests {
     public void testUserNameGetter_GetsUsername() throws NoSuchFieldException, IllegalAccessException {
         //given
         final Player player = new Player();
-        final Field field = player.getClass().getDeclaredField("userName");
+        final Field field = player.getClass().getDeclaredField("username");
         field.setAccessible(true);
         field.set(player, "Player 1");
 
