@@ -1,14 +1,19 @@
 package com.BNP.tictactoe.Services;
 
+import com.BNP.tictactoe.models.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 public class GameServiceTests {
     GameService instance;
@@ -19,9 +24,11 @@ public class GameServiceTests {
     }
 
 
+
     @Test
     public void CreateGameTest(){
-
+        Player player = Mockito.mock(Player.class);
+        assertEquals(instance.createGame(player));
 
     }
 
