@@ -112,7 +112,7 @@ public class GameTests {
         GameState gameState = GameState.NEW;
 
         //when
-        game.setGameState(gameState);
+        game.setState(gameState);
 
         //then
         final Field field = game.getClass().getDeclaredField("gameState");
