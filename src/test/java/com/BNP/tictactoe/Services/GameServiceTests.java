@@ -28,9 +28,10 @@ public class GameServiceTests {
 
     @Test
     public void CreateGameTest(){
-        Player player = Mockito.mock(Player.class);
+        Player player1 = Mockito.mock(Player.class);
+        Player player2 = Mockito.mock(Player.class);
         Game game = Mockito.mock(Game.class);
-        assertEquals(instance.createGame(player), game);
+        assertEquals(instance.createGame(player1, player2), game);
     }
 
 
