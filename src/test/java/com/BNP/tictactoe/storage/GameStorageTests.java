@@ -15,18 +15,16 @@ public class GameStorageTests {
     @Test
     public void testGamesGetter_GetsGames() throws NoSuchFieldException, IllegalAccessException {
         //given
-        final GameStorage gameStorage = new GameStorage();
+        final Game singleGame = new Game();
+        singleGame.setGameId("test");
         final Map<String, Game> games = Map.ofEntries(
-                Map.entry("Test", new Game())
+                Map.entry("test", singleGame)
         );
-        final Field field = gameStorage.getClass().getDeclaredField("games");
-        field.setAccessible(true);
-        field.set(gameStorage, games);
-
         //when
+        GameStorage.getInstance().setGame(singleGame);
 
         //then
-        assertEquals("Field wasn't retrieved properly", gameStorage.getGames(), games);
+        assertEquals("Field wasn't retrieved properly", GameStorage.getInstance().getGames(), games);
     }
 
     @Test
@@ -39,15 +37,6 @@ public class GameStorageTests {
         GameStorage.getInstance().setGame(game);
 
         //then
-        assertEquals("Field wasn't set properly", GameStorage.getInstance().getGames.containsKey(game.getGameId()), game);
-    }
-
-    @Test
-    public void testGetInstance_GetsInstance() throws NoSuchFieldException, IllegalAccessException {
-        //given
-        GameStorage gameStorage = new GameStorage();
-        //when
-        //then
-        assertEquals("Field wasn't retrieved properly", GameStorage.getInstance(), gameStorage);
+        assertEquals("Field wasn't set properly", GameStorage.getInstance().getGames().containsKey(game.getGameId()), game);
     }
 }

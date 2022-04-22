@@ -55,21 +55,21 @@ public class GameService {
         return game;
     }
 
-    private Boolean checkWinner(int[][] board, TicTacToe ticTacToe) {
+    public Boolean checkWinner(int[][] board, TicTacToe ticTacToe) {
         int[] boardArray = new int[9];
         int counterIndex = 0;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                boardArray[counterIndex] = board[i][j];
+        for (int[] ints : board) {
+            for (int anInt : ints) {
+                boardArray[counterIndex] = anInt;
                 counterIndex++;
             }
         }
 
         int[][] winCombinations = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {2, 4, 6}};
-        for (int i = 0; i < winCombinations.length; i++) {
+        for (int[] winCombination : winCombinations) {
             int counter = 0;
-            for (int j = 0; j < winCombinations[i].length; j++) {
-                if (boardArray[winCombinations[i][j]] == ticTacToe.getValue()) {
+            for (int i : winCombination) {
+                if (boardArray[i] == ticTacToe.getValue()) {
                     counter++;
                     if (counter == 3) {
                         return true;

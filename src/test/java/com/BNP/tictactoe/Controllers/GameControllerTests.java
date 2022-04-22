@@ -40,10 +40,6 @@ public class GameControllerTests {
     private MockMvc mockMvc;
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-    @BeforeEach
-    void Before(){
-        GameController gameController = new GameController();
-    }
 
 
     @Test
@@ -63,12 +59,12 @@ public class GameControllerTests {
 
 
     @Test
-    void StartGameTest() throws Exception {
+    void GamePlayTest() throws Exception {
         Game game = new Game();
         game.setGameId("testingGameplay");
         GamePlay gp = new GamePlay();
 
-        when(gameService.gameplay(gp)).thenReturn(game);
+        when(gameService.gamePlay(gp)).thenReturn(game);
 
         mockMvc.perform(MockMvcRequestBuilders.post("game/gameplay"))
                 .andExpect(status().isOk())

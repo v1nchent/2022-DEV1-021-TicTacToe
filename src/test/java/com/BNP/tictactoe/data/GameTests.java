@@ -115,7 +115,7 @@ public class GameTests {
         game.setState(gameState);
 
         //then
-        final Field field = game.getClass().getDeclaredField("gameState");
+        final Field field = game.getClass().getDeclaredField("state");
         field.setAccessible(true);
         assertEquals("Fields didn't match", field.get(game), gameState);
     }
@@ -124,7 +124,7 @@ public class GameTests {
     public void testGameStateGetter_GetsGameState() throws NoSuchFieldException, IllegalAccessException {
         //given
         GameState gameState = GameState.FINISHED;
-        final Field field = game.getClass().getDeclaredField("gameState");
+        final Field field = game.getClass().getDeclaredField("state");
         field.setAccessible(true);
         field.set(game, gameState);
 

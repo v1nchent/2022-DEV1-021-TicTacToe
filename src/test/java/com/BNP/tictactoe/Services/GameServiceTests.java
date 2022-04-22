@@ -1,5 +1,7 @@
 package com.BNP.tictactoe.Services;
 
+import com.BNP.tictactoe.exception.InvalidGameException;
+import com.BNP.tictactoe.exception.NotFoundException;
 import com.BNP.tictactoe.models.*;
 import com.BNP.tictactoe.service.GameService;
 import com.BNP.tictactoe.storage.GameStorage;
@@ -38,15 +40,15 @@ public class GameServiceTests {
     public Stream<Arguments> GamePlayProviderNormalMove() {
         Game testGame =  new Game();
         testGame.setBoard(new int[3][3]);
-        testGame.setGameID("testingNormalMoves");
+        testGame.setGameId("testingNormalMoves");
         testGame.setState(GameState.NEW);
         GamePlay gp1 = new GamePlay();
-        gp1.setGame(testGame);
+        gp1.setGameId("testingNormalMoves");
         gp1.setType(TicTacToe.X);
         gp1.setCoordinateX(0);
         gp1.setCoordinateY(1);
         GamePlay gp2 = new GamePlay();
-        gp2.setGame(testGame);
+        gp2.setGameId("testingGameNormalMoves");
         gp2.setType(TicTacToe.O);
         gp2.setCoordinateX(2);
         gp2.setCoordinateY(2);
@@ -58,22 +60,22 @@ public class GameServiceTests {
 
     public Stream<Arguments> GamePlayProviderWinningMove() {
         Game testGame1 =  new Game();
-        testGame.setBoard(new int[][] {{1,1,0}, {0,0,0}, {0,0,0}});
-        testGame.setGameID("testingWinningXMove");
-        testGame.setState(GameState.NEW);
+        testGame1.setBoard(new int[][] {{1,1,0}, {0,0,0}, {0,0,0}});
+        testGame1.setGameId("testingWinningXMove");
+        testGame1.setState(GameState.NEW);
         GameStorage.getInstance().setGame(testGame1);
         Game testGame2 =  new Game();
-        testGame.setBoard(new int[][] {{2,2,0}, {0,0,0}, {0,0,0}});
-        testGame.setGameID("testingWinningOMove");
-        testGame.setState(GameState.NEW);
+        testGame2.setBoard(new int[][] {{2,2,0}, {0,0,0}, {0,0,0}});
+        testGame2.setGameId("testingWinningOMove");
+        testGame2.setState(GameState.NEW);
         GameStorage.getInstance().setGame(testGame2);
         GamePlay gp1 = new GamePlay();
-        gp1.setGame(testGame1);
+        gp1.setGameId("testingWinningXMove");
         gp1.setType(TicTacToe.X);
         gp1.setCoordinateX(0);
         gp1.setCoordinateY(1);
         GamePlay gp2 = new GamePlay();
-        gp2.setGame(testGame2);
+        gp2.setGameId("testingWinningOMove");
         gp2.setType(TicTacToe.X);
         gp2.setCoordinateX(2);
         gp2.setCoordinateY(2);
@@ -87,12 +89,12 @@ public class GameServiceTests {
     @MethodSource("GamePlayProviderNormalMove")
     public void GamePlayNormalMoveTest(GamePlay gamePlay){
         int[][] board = GameStorage.getInstance().getGames().get(gamePlay.getGameId()).getBoard();
-        assertTrue(board[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == GamePlay.getType());
+        assertTrue(board[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == gamePlay.getType().getValue());
     }
 
     @ParameterizedTest
     @MethodSource("GamePlayProviderWinningMove")
-    public void GamePlayWinningMoveTest(GamePlay gamePlay){
+    public void GamePlayWinningMoveTest(GamePlay gamePlay) throws InvalidGameException, NotFoundException {
         Game game = instance.gamePlay(gamePlay);
         assertTrue(game.getWinner() == gamePlay.getType());
     }
@@ -153,25 +155,25 @@ public class GameServiceTests {
     @ParameterizedTest
     @MethodSource("TrueBoardProviderP1")
     public void checkWinner_multipleTrueBoardsP1(int[][] board) {
-        assertEquals("All boards should let player X win", true, instance.checkWinner(board, TicTacToe.X));
+        assertTrue(instance.checkWinner(board, TicTacToe.X));
     }
 
     @ParameterizedTest
     @MethodSource("TrueBoardProviderP2")
     public void checkWinner_multipleTrueBoardsP2(int[][] board) {
-        assertEquals("All boards should let player 0 win", true, instance.checkWinner(board, TicTacToe.O));
+        assertTrue(instance.checkWinner(board, TicTacToe.O));
     }
 
     @ParameterizedTest
     @MethodSource("FalseBoardProviderP1")
     public void checkWinner_multipleFalseBoardsP1(int[][] board) {
-        assertEquals("No boards should let player X win", false, instance.checkWinner(board, TicTacToe.X));
+        assertFalse(instance.checkWinner(board, TicTacToe.X));
     }
 
     @ParameterizedTest
     @MethodSource("FalseBoardProviderP2")
     public void checkWinner_multipleFalseBoardsP2(int[][] board) {
-        assertEquals("No boards should let player O win", false, instance.checkWinner(board, TicTacToe.O));
+        assertFalse(instance.checkWinner(board, TicTacToe.O));
     }
 
 }
