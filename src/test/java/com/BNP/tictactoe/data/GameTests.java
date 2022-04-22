@@ -129,7 +129,7 @@ public class GameTests {
         field.set(game, gameState);
 
         //when
-        final GameState result = game.getGameState();
+        final GameState result = game.getState();
 
         //then
         assertEquals("Field wasn't retrieved properly", result, gameState);
