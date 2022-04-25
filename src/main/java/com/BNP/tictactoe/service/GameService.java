@@ -55,7 +55,7 @@ public class GameService {
         return game;
     }
 
-    public Boolean checkWinner(int[][] board, TicTacToe ticTacToe) {
+    public static Boolean checkWinner(int[][] board, TicTacToe ticTacToe) {
         int[] boardArray = new int[9];
         int counterIndex = 0;
         for (int[] ints : board) {

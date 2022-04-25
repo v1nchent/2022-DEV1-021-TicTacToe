@@ -1,74 +1,72 @@
 package com.BNP.tictactoe.Controllers;
 
 import com.BNP.tictactoe.controller.GameController;
-import com.BNP.tictactoe.models.Game;
-import com.BNP.tictactoe.models.GamePlay;
-import com.BNP.tictactoe.models.Player;
-import com.BNP.tictactoe.models.TicTacToe;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.BNP.tictactoe.models.*;
 import com.BNP.tictactoe.service.GameService;
+import com.BNP.tictactoe.storage.GameStorage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
+import java.util.Objects;
 
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.charset.Charset;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(GameController.class)
+@SpringBootTest
 public class GameControllerTests {
+    GameService gameService;
+    GameController gameController;
 
-    @MockBean
-    private GameService gameService;
-    @Autowired
-    private MockMvc mockMvc;
-
-    public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-
+    @BeforeEach
+    void Before(){
+        gameService = new GameService();
+        gameController = new GameController(gameService);
+    }
 
     @Test
     void StartGameTest() throws Exception {
         Player p1 = new Player();
+        p1.setUsername("test1");
         Player p2 = new Player();
+        p2.setUsername("test2");
         Game game = new Game();
         game.setGameId("testingCreateGame");
-        when(gameService.createGame(p1, p2)).thenReturn(game);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("game/start"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.gameId").value("testingCreateGame"))
-                .andExpect(jsonPath("$.state").value("NEW"))
-                .andDo(print());
+        ResponseEntity<Game> responseEntity = gameController.start(p1,p2);
+
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        System.out.println(Objects.requireNonNull(responseEntity.getBody()).getGameId());
+        Assertions.assertFalse(GameStorage.getInstance().getGames().isEmpty());
+        assertEquals(GameStorage.getInstance().getGames().get(responseEntity.getBody().getGameId()).getPlayer1(), p1);
+        assertEquals(GameStorage.getInstance().getGames().get(responseEntity.getBody().getGameId()).getPlayer2(), p2);
+        assertArrayEquals(GameStorage.getInstance().getGames().get(responseEntity.getBody().getGameId()).getBoard(), new int[3][3]);
+        assertEquals(GameStorage.getInstance().getGames().get(responseEntity.getBody().getGameId()).getState(), GameState.NEW);
+
     }
 
 
     @Test
     void GamePlayTest() throws Exception {
         Game game = new Game();
+        game.setBoard(new int[][] {{0,1,0}, {0,0,0}, {0,0,0}});
+        game.setState(GameState.NEW);
         game.setGameId("testingGameplay");
+        GameStorage.getInstance().setGame(game);
+
         GamePlay gp = new GamePlay();
+        gp.setGameId("testingGameplay");
+        gp.setType(TicTacToe.X);
+        gp.setCoordinateX(0);
+        gp.setCoordinateY(2);
 
-        when(gameService.gamePlay(gp)).thenReturn(game);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("game/gameplay"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.gameId").value("testingGameplay"))
-                .andDo(print());
+        ResponseEntity<Game> responseEntity = gameController.gamePlay(gp);
+
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertArrayEquals(GameStorage.getInstance().getGames().get(responseEntity.getBody().getGameId()).getBoard(), new int[][] {{0,1,1}, {0,0,0}, {0,0,0}});
     }
 }
