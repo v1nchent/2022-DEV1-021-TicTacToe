@@ -37,6 +37,6 @@ public class GameStorageTests {
         GameStorage.getInstance().setGame(game);
 
         //then
-        assertEquals("Field wasn't set properly", GameStorage.getInstance().getGames().containsKey(game.getGameId()), game);
+        assertEquals("Field wasn't set properly", GameStorage.getInstance().getGames().get("TestIfGameExists"), game);
     }
 }
