@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/tictactoe/node_modules/
