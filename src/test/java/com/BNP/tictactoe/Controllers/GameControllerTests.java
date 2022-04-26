@@ -35,8 +35,11 @@ public class GameControllerTests {
         p2.setUsername("test2");
         Game game = new Game();
         game.setGameId("testingCreateGame");
+        PlayerHolder playerHolder = new PlayerHolder();
+        playerHolder.setP1(p1);
+        playerHolder.setP2(p2);
 
-        ResponseEntity<Game> responseEntity = gameController.start(p1,p2);
+        ResponseEntity<Game> responseEntity = gameController.start(playerHolder);
 
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
         System.out.println(Objects.requireNonNull(responseEntity.getBody()).getGameId());
